@@ -1,7 +1,9 @@
 class PrototypesController < ApplicationController
-  before_action :authenticate_user!, only: [:show,:index,:new]
+  before_action :authenticate_user!, only: [:new,:edit,:destroy]
+  #この記述でログアウト状態のユーザーは、プロトタイプ新規投稿ページ・プロトタイプ編集ページに遷移しようとすると、ログインページにリダイレクトされる
+  
   # before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :move_to_index, except: :index
+  before_action :move_to_index, except: [:index,:show]
 
 
   def index
@@ -13,18 +15,17 @@ class PrototypesController < ApplicationController
   end
 
   def create
-    Prototype.create(prototype_params)
-    @prototype = Prototype.new
+    @prototype = Prototype.new(prototype_params)
     if @prototype.save
-      redirect_to prototype_path(@prototype)
+      redirect_to root_path
     else
-      render :index
+      render :new
     end
   end
 
   def destroy
-    prototype = Prototype.find(params[:id])
-    prototype.destroy
+    # prototype = Prototype.find(params[:id])
+    # prototype.destroy
   end
 
   def edit
@@ -35,9 +36,9 @@ class PrototypesController < ApplicationController
   end
 
   def update
-    prototype = Prototype.find(params[:id])
-    if prototype.update(prototype_params)
-      redirect_to root_path
+    @prototype = Prototype.find(params[:id])
+    if @prototype.update(prototype_params)
+      redirect_to prototype_path
     else
       render :edit
     end
