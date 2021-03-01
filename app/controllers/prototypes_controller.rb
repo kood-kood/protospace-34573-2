@@ -25,7 +25,12 @@ class PrototypesController < ApplicationController
 
   def destroy
     # prototype = Prototype.find(params[:id])
-    # prototype.destroy
+    #  if prototype.user_id == current_user.id
+    #   prototype.destroy #destroyメソッドを使用し対象のツイートを削除する。
+    #  end
+    prototype = Prototype.find(params[:id])
+    prototype.destroy
+    redirect_to prototypes_path
   end
 
   def edit
